@@ -1,0 +1,16 @@
+
+
+python-dotenv==1.1.1
+pydantic[email]==2.11.7
+pydantic-settings==2.10.1
+langchain
+langchain-classic==1.0.0
+langchain-community
+langchain-google-genai
+google-genai==1.31.0
+pinecone==7.3.0
+pypdf==6.0.0
+streamlit==1.48.1
+pandas==2.3.2
+rank-bm25==0.2.2
+ragas==0.2.0
