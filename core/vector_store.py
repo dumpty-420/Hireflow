@@ -150,12 +150,6 @@ class VectorStore:
                 logger.error(f"Failed to add resumes: {e}")
             return False
 
-        for i, doc in enumerate(documents):
-            metadata = doc.metadata.copy()
-            # Truncate page_content to stay under Pinecone's 40KB metadata limit
-            metadata["page_content"] = doc.page_content[:8000]  # ~8KB, safe limit
-            metadata["type"] = "resume"
-
     def add_job_descriptions(self, documents: List[Any]) -> bool:
         """Convert job description documents to embeddings and store in Pinecone"""
         if not self._ready or not self.index:
@@ -199,12 +193,6 @@ class VectorStore:
                 logger.error(f"Failed to add job descriptions: {e}")
             return False
 
-        for i, doc in enumerate(documents):
-            metadata = doc.metadata.copy()
-            # Truncate page_content to stay under Pinecone's 40KB metadata limit
-            metadata["page_content"] = doc.page_content[:8000]  # ~8KB, safe limit
-            metadata["type"] = "resume"
-
     def search_resumes(
         self, query: str, top_k: int = 5, filters: Dict[str, Any] = None
     ) -> List[Dict[str, Any]]:
@@ -239,6 +227,8 @@ class VectorStore:
                     "page_content": item.metadata.get("page_content", ""),
                     "metadata": item.metadata,
                     "score": item.score,
+                    "name": item.metadata.get("name", "Unknown"),  # resumes
+                    "candidate_id": item.metadata.get("candidate_id", ""),  # resumes
                 }
                 for item in results.matches
             ]
@@ -284,6 +274,10 @@ class VectorStore:
                     "page_content": item.metadata.get("page_content", ""),
                     "metadata": item.metadata,
                     "score": item.score,
+                    "name": item.metadata.get(
+                        "title", item.metadata.get("name", "Unknown")
+                    ),  # JDs
+                    "jd_id": item.metadata.get("jd_id", ""),
                 }
                 for item in results.matches
             ]

@@ -4,7 +4,10 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
-load_dotenv()
+from pathlib import Path
+
+load_dotenv(Path(__file__).parent.parent / ".env")
+
 
 class AppConfig(BaseSettings):
     """Minimal application configuration (only what's used)."""
@@ -23,6 +26,7 @@ class AppConfig(BaseSettings):
         env_file = ".env"
         case_sensitive = False
         extra = "ignore"
+
 
 config = AppConfig()
 
